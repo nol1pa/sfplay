@@ -5,12 +5,13 @@ public with sharing class ThreeTaskUnited {
         
         List<Task> tskList = [Select Id, status, WhatId FROM TASK WHERE OwnerId != null];
         
-        List<User> userList = [SELECT Id FROM User WHERE Id = '0055g00000AV0jN'];        
+        List<User> userList = [SELECT Id FROM User WHERE Id = '0055g00000AV0jN' OR Id = '0055g00000ARGc8'];        
         
         List<AggregateResult> newTask = [SELECT COUNT(CreatedById), WhatId  FROM Task GROUP BY WhatId HAVING COUNT(WhatId) > 3];
        
         AggregateResult[] groupedResults = [SELECT COUNT(CreatedById), WhatId  FROM Task GROUP BY WhatId HAVING COUNT(WhatId) > 3];
         
+        string getRandomId = userList.get(Math.floor( Math.random() * userList.size() ).intValue()).id;
         
         for (AggregateResult ar : groupedResults)  {
             if ((integer)ar.get('expr0') > 3){
@@ -18,7 +19,7 @@ public with sharing class ThreeTaskUnited {
                 taskIdSet.WhatId = (string)ar.get('WhatId');
                 for(Task taskObj : tskList){
                     if(taskObj.WhatId == taskIdSet.WhatId){
-                        taskObj.OwnerId = userList[0].id;    
+                        taskObj.OwnerId = getRandomId;    
                     }
                 }                
             }
