@@ -2,7 +2,6 @@ public with sharing class ThreeTaskUnited {
 
     @InvocableMethod(label='Three Tasks united' description='Union tasks when amount of their is three or more' category='Account')
     public static void unitedTasks(List<Account> accList){      
-		//List<Task> tskList = new List<Task>();
         
         List<Task> tskList = [Select Id, status, WhatId FROM TASK WHERE OwnerId != null];
         
@@ -12,7 +11,6 @@ public with sharing class ThreeTaskUnited {
        
         AggregateResult[] groupedResults = [SELECT COUNT(CreatedById), WhatId  FROM Task GROUP BY WhatId HAVING COUNT(WhatId) > 3];
         
-        //hii my new issue
         
         for (AggregateResult ar : groupedResults)  {
             if ((integer)ar.get('expr0') > 3){
@@ -20,16 +18,7 @@ public with sharing class ThreeTaskUnited {
                 taskIdSet.WhatId = (string)ar.get('WhatId');
                 for(Task taskObj : tskList){
                     if(taskObj.WhatId == taskIdSet.WhatId){
-                        /*Task task = new Task();
-                        task.Id = taskObj.Id;
-                        task.WhatId = taskObj.WhatId;
-                        task.Subject = taskObj.Subject;
-                        task.OwnerId = userList[0].Id;
-                        task.Priority = taskObj.Priority;
-                        task.Status = taskObj.Status;
-                        tskList.add(task);*/
-                        taskObj.OwnerId = userList[0].id;
-                        
+                        taskObj.OwnerId = userList[0].id;    
                     }
                 }                
             }
